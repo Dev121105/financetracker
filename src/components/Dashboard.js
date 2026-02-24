@@ -13,9 +13,9 @@ import NoTransactions from './NoTransactions';
 
 
 function Dashboard() {
-  const[user] = useAuthState(auth);
+  const [user] = useAuthState(auth);
   const [transactions, setTransactions] = useState([]);
-  const [loading,setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [isExpenseModalVisible, setIsExpenseModalVisible] = useState(false);
   const [isIncomeModalVisible, setIsIncomeModalVisible] = useState(false);
 
@@ -58,88 +58,85 @@ function Dashboard() {
       );
       console.log("Document written with ID: ", docRef.id);
       toast.success("Transaction Added!");
-      
+
       // Create a new array instead of mutating state directly
       const newArr = [...transactions, transaction];
       setTransactions(newArr);
-      calculateBalance();
     } catch (e) {
       console.error("Error adding document: ", e);
-        toast.error("Couldn't add transaction");
+      toast.error("Couldn't add transaction");
     }
   }
+
   useEffect(() => {
+    async function fetchTransactions() {
+      setLoading(true);
+      if (user) {
+        const q = query(collection(db, `users/${user.uid}/transactions`));
+        const querySnapshot = await getDocs(q);
+        let transactionsArray = [];
+        querySnapshot.forEach((doc) => {
+          // doc.data() is never undefined for query doc snapshots
+          transactionsArray.push(doc.data());
+        });
+        setTransactions(transactionsArray);
+        // console.log("Fetched transactions: ", transactionsArray);
+        toast.success("Transactions Fetched!");
+      }
+      setLoading(false);
+    }
     fetchTransactions();
   }, [user]);
 
   useEffect(() => {
+    const calculateBalance = () => {
+      let incomeTotal = 0;
+      let expensesTotal = 0;
+
+      transactions.forEach((transaction) => {
+        if (transaction.type === "income") {
+          incomeTotal += transaction.amount;
+        } else {
+          expensesTotal += transaction.amount;
+        }
+      });
+
+      setIncome(incomeTotal);
+      setExpenses(expensesTotal);
+      setCurrentBalance(incomeTotal - expensesTotal);
+    };
     calculateBalance();
   }, [transactions]);
 
-
-  async function fetchTransactions() {
-    setLoading(true);
-    if (user) {
-      const q = query(collection(db, `users/${user.uid}/transactions`));
-      const querySnapshot = await getDocs(q);
-      let transactionsArray = [];
-      querySnapshot.forEach((doc) => {
-        // doc.data() is never undefined for query doc snapshots
-        transactionsArray.push(doc.data());
-      });
-      setTransactions(transactionsArray);
-      // console.log("Fetched transactions: ", transactionsArray);
-      toast.success("Transactions Fetched!");
-    }
-    setLoading(false);
-  }
-  
-  const calculateBalance = () => {
-    let incomeTotal = 0;
-    let expensesTotal = 0;
-
-    transactions.forEach((transaction) => {
-      if (transaction.type === "income") {
-        incomeTotal += transaction.amount;
-      } else {
-        expensesTotal += transaction.amount;
-      }
-    });
-
-    setIncome(incomeTotal);
-    setExpenses(expensesTotal);
-    setCurrentBalance(incomeTotal - expensesTotal);
-  };
-  
   // Create a new sorted array instead of mutating the original
   let sortedTransaction = [...transactions].sort((a, b) => {
-      return new Date(a.date) - new Date(b.date);
+    return new Date(a.date) - new Date(b.date);
   });
- 
+
   return (
     <div>
       <Header />
-      {loading ? <p>Loading...</p> 
-        :<>
-        <Cards 
-          income={income}
-          expenses={expenses}
-          currentBalance={currentBalance}
-          showExpenseModal={showExpenseModal}
-          showIncomeModal={showIncomeModal} 
+      {loading ? <p>Loading...</p>
+        : <>
+          <Cards
+            income={income}
+            expenses={expenses}
+            currentBalance={currentBalance}
+            showExpenseModal={showExpenseModal}
+            showIncomeModal={showIncomeModal}
           />
-         {transactions && transactions.length!=0?<Chart sortedTransaction={sortedTransaction} />:<NoTransactions />} 
+          {transactions && transactions.length !== 0 ? <Chart sortedTransaction={sortedTransaction} /> : <NoTransactions />}
           <AddExpenseModal
-              isExpenseModalVisible={isExpenseModalVisible}
-              handleExpenseCancel={handleExpenseCancel}
-              onFinish={onFinish}
-            />
-            <AddIncomeModal
-              isIncomeModalVisible={isIncomeModalVisible}
-              handleIncomeCancel={handleIncomeCancel}
-              onFinish={onFinish}
-            />
-            <TransactionsTable transactions={transactions}/>
+            isExpenseModalVisible={isExpenseModalVisible}
+            handleExpenseCancel={handleExpenseCancel}
+            onFinish={onFinish}
+          />
+          <AddIncomeModal
+            isIncomeModalVisible={isIncomeModalVisible}
+            handleIncomeCancel={handleIncomeCancel}
+            onFinish={onFinish}
+          />
+          <TransactionsTable transactions={transactions} />
         </>
       }
     </div>
