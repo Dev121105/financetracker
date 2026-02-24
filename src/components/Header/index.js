@@ -7,7 +7,7 @@ import { toast } from 'react-toastify';
 import { signOut } from 'firebase/auth';
 import userImg from "../../assets/user.svg"
 function Header() {
-  const [user, loading] = useAuthState(auth);
+  const [user] = useAuthState(auth);
   const navigate = useNavigate();
   useEffect(() => {
     if (user) {
