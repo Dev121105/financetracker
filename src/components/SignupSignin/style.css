@@ -1,65 +1,99 @@
-.signup-wrapper{
-    width: 70%;
-    max-width: 500px;
+.signup-wrapper {
+    width: 90%;
+    max-width: 450px;
     height: auto;
-    box-shadow: 0px 0px 30px 8px rgba(57, 57, 57, 0.75);
-    border-radius: 1rem;
-    padding: 1rem 1.5rem;
+    background-color: #ffffff;
+    box-shadow: 0px 10px 40px rgba(0, 0, 0, 0.08);
+    /* Modern, soft shadow */
+    border-radius: 1.5rem;
+    padding: 2.5rem 2rem;
     top: 0;
     left: 0;
     color: black;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
 }
-.login-wrapper{
-    width: 70%;
-    max-width: 500px;
+
+.login-wrapper {
+    width: 90%;
+    max-width: 450px;
     height: auto;
-    box-shadow: 0px 0px 30px 8px rgba(57, 57, 57, 0.75);
-    border-radius: 1rem;
-    padding: 1rem 1.5rem;
+    background-color: #ffffff;
+    box-shadow: 0px 10px 40px rgba(0, 0, 0, 0.08);
+    /* Modern, soft shadow */
+    border-radius: 1.5rem;
+    padding: 2.5rem 2rem;
     top: 0;
     left: 0;
+    color: black;
+    display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
 }
+
 .label-input {
     color: black;
 }
-.title{
+
+.title {
     font-weight: 400;
     font-size: 1.2rem;
     text-align: center;
     color: black;
 }
-.p-login{
+
+.p-login {
     text-Align: center;
-    color : grey;
-    margin:0;
+    color: grey;
+    margin: 0;
     font-weight: 300;
     font-size: 0.8rem;
 }
-.p-signup{
+
+.p-signup {
     text-Align: center;
-    color : grey;
-    margin:0;
+    color: grey;
+    margin: 0;
     font-weight: 300;
     font-size: 0.8rem;
 }
-.p-signupOr{
+
+.p-signupOr {
     text-Align: center;
-    color : grey;
-    margin:0;
+    color: grey;
+    margin: 0;
     font-weight: 300;
 }
-span{
+
+span {
     cursor: pointer;
     font-weight: 500;
 }
 
-@media (max-width: 600px){
-    .signup-wrapper, .login-wrapper{ width: 90%; padding: 0.9rem 1rem; max-width: 420px; }
-    .title{ font-size: 1rem; }
-    .p-login, .p-signup, .p-signupOr{ font-size: 0.75rem; }
+.signup-wrapper form,
+.login-wrapper form {
+    width: 100%;
+}
+
+@media (max-width: 600px) {
+
+    .signup-wrapper,
+    .login-wrapper {
+        width: 90%;
+        padding: 0.9rem 1rem;
+        max-width: 420px;
+    }
+
+    .title {
+        font-size: 1rem;
+    }
+
+    .p-login,
+    .p-signup,
+    .p-signupOr {
+        font-size: 0.75rem;
+    }
 }
